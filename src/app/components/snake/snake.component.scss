@@ -1,0 +1,12 @@
+.snake-part{
+  background-color: var(--snake-color);
+  border: 2px solid var(--background-color);
+  width: var(--box-size);
+  height: var(--box-size);
+  display: inline-flex;
+  box-sizing: border-box;
+
+  &.snake-head{
+    filter: brightness(150%);
+  }
+}

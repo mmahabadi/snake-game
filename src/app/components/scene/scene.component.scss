@@ -1,0 +1,6 @@
+.scene{
+    width: calc(35 * var(--box-size));
+    height: calc(35 * var(--box-size));
+    overflow: hidden;
+    border: 10px solid var(--box-color);
+}

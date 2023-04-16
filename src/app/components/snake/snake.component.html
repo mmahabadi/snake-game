@@ -1,0 +1,4 @@
+<div 
+  *ngFor="let size of gameService.snakeLength$ | async; let last = last;" 
+  [ngClass]="{'snake-part': true, 'snake-head': last}"
+></div>
