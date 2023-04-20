@@ -1,3 +1,5 @@
 <div ngClass="scene">
-    <ng-content></ng-content>
+  <div class="game-board">
+    <div class="cell" *ngFor="let cell of gameBoard"></div>
+  </div>
 </div>

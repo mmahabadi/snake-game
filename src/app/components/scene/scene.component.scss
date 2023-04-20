@@ -1,6 +1,15 @@
-.scene{
-    width: calc(35 * var(--box-size));
-    height: calc(35 * var(--box-size));
-    overflow: hidden;
-    border: 10px solid var(--box-color);
+.scene {
+  overflow: hidden;
+  border: 10px solid var(--box-color);
+
+  .game-board {
+    display: grid;
+    grid-template-columns: repeat(20, 20px);
+    grid-template-rows: repeat(20, 20px);
+    grid-gap: 1px;
+  }
+
+  .cell {
+    border: 1px solid var(--box-color);
+  }
 }
