@@ -3,18 +3,11 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
 import { SceneComponent } from './components/scene/scene.component';
-import { SnakeComponent } from './components/snake/snake.component';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    SceneComponent,
-    SnakeComponent
-  ],
-  imports: [
-    BrowserModule
-  ],
+  declarations: [AppComponent, SceneComponent],
+  imports: [BrowserModule],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
