@@ -1,7 +1,5 @@
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import {
-  Observable,
-  Subject,
   Subscription,
   interval,
   scan,
@@ -16,13 +14,43 @@ import { Direction } from 'src/app/types';
   templateUrl: './scene.component.html',
   styleUrls: ['./scene.component.scss'],
 })
-export class SceneComponent implements OnInit {
+export class SceneComponent implements OnDestroy {
   gameBoard: number[] = Array(400).fill(0);
   snake: number[] = [180, 181, 182]; // initialize snake heading right
   direction: Direction = Direction.Right;
+  private interval$!: Subscription;
 
-  ngOnInit(): void {
-    interval(SPEED)
+  ngOnDestroy() {
+    this.interval$.unsubscribe();
+  }
+
+  @HostListener('document:keydown', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent) {
+    switch (event.key) {
+      case 'ArrowUp':
+        if (this.direction !== Direction.Down) {
+          this.direction = Direction.Up;
+        }
+        break;
+      case 'ArrowDown':
+        if (this.direction !== Direction.Up) {
+          this.direction = Direction.Down;
+        }
+        break;
+      case 'ArrowLeft':
+        if (this.direction !== Direction.Right) {
+          this.direction = Direction.Left;
+        }
+        break;
+      case 'ArrowRight':
+        if (this.direction !== Direction.Left) {
+          this.direction = Direction.Right;
+        }
+        break;
+    }
+
+    if (!this.interval$) {
+      this.interval$ = interval(SPEED)
         .pipe(
           startWith(null),
           scan(() => this.moveSnake(this.snake, this.direction), this.snake),
@@ -31,6 +59,7 @@ export class SceneComponent implements OnInit {
         .subscribe((snake: number[]) => {
           this.snake = snake;
         });
+    }
   }
 
   moveSnake(snake: number[], direction: Direction): number[] {
@@ -65,7 +94,7 @@ export class SceneComponent implements OnInit {
     const head = snake[snake.length - 1];
     const row = Math.floor(head / 20);
     const col = head % 20;
-    return col > 0 && col < 19 && row > 0 && row < 19;
+    return col > 0 && col < 19 && row >= 0 && row < 19;
   }
 
   isSnakeSegment(index: number): boolean {
