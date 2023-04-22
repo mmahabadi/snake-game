@@ -4,8 +4,8 @@
 
   .game-board {
     display: grid;
-    grid-template-columns: repeat(20, 20px);
-    grid-template-rows: repeat(20, 20px);
+    grid-template-columns: repeat(25, 20px);
+    grid-template-rows: repeat(25, 20px);
     grid-gap: 1px;
   }
 
@@ -15,5 +15,26 @@
 
   .snake {
     background-color: var(--snake-color);
+  }
+  .game-over {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+
+    h4 {
+      color: var(--game-over-color);
+      font-size: 2rem;
+      margin: 0;
+      margin-bottom: 1rem;
+    }
+    button {
+      background: transparent;
+      border: 2px solid var(--game-over-color);
+      width: 100%;
+      padding: 0.7rem;
+      color: var(--game-over-color);
+      font-size: 1.3rem;
+    }
   }
 }

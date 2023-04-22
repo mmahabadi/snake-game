@@ -5,9 +5,11 @@
   --apple-color: #84fe26;
   --box-size: 1rem;
   --box-color: #455c25;
+  --game-over-color: #84fe26;
 }
 
-html, body {
+html,
+body {
   height: 100%;
   background: var(--background-color);
 }

@@ -1,9 +1,13 @@
 <div ngClass="scene">
-  <div class="game-board">
+  <div ngClass="game-board">
     <div
       class="cell"
       *ngFor="let cell of gameBoard; let i = index"
       [ngClass]="{ snake: isSnakeSegment(i) }"
     ></div>
+    <div ngClass="game-over" *ngIf="isGameOver">
+      <h4>GAME OVER</h4>
+      <button (click)="playAgain()">Play Again</button>
+    </div>
   </div>
 </div>

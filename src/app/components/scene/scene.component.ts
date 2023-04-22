@@ -1,12 +1,6 @@
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
-import {
-  Subscription,
-  interval,
-  scan,
-  startWith,
-  takeWhile,
-} from 'rxjs';
-import { SPEED } from 'src/app/constants';
+import { Subscription, interval, scan, startWith, takeWhile } from 'rxjs';
+import { COLS, ROWS, SPEED } from 'src/app/constants';
 import { Direction } from 'src/app/types';
 
 @Component({
@@ -15,10 +9,11 @@ import { Direction } from 'src/app/types';
   styleUrls: ['./scene.component.scss'],
 })
 export class SceneComponent implements OnDestroy {
-  gameBoard: number[] = Array(400).fill(0);
+  gameBoard: number[] = Array(COLS * ROWS).fill(0);
   snake: number[] = [180, 181, 182]; // initialize snake heading right
   direction: Direction = Direction.Right;
   private interval$!: Subscription;
+  isGameOver = false;
 
   ngOnDestroy() {
     this.interval$.unsubscribe();
@@ -50,23 +45,38 @@ export class SceneComponent implements OnDestroy {
     }
 
     if (!this.interval$) {
-      this.interval$ = interval(SPEED)
-        .pipe(
-          startWith(null),
-          scan(() => this.moveSnake(this.snake, this.direction), this.snake),
-          takeWhile(() => this.isSnakeInBounds(this.snake))
-        )
-        .subscribe((snake: number[]) => {
-          this.snake = snake;
-        });
+      this.startGame();
     }
+  }
+
+  startGame() {
+    this.interval$ = interval(SPEED)
+      .pipe(
+        startWith(null),
+        scan(() => this.moveSnake(this.snake, this.direction), this.snake),
+        takeWhile(() => this.isSnakeInBounds(this.snake))
+      )
+      .subscribe(
+        (snake: number[]) => {
+          this.snake = snake;
+        },
+        console.error,
+        () => (this.isGameOver = true)
+      );
+  }
+
+  playAgain() {
+    this.isGameOver = false;
+    this.snake = [180, 181, 182];
+    this.direction = Direction.Right;
+    this.startGame();
   }
 
   moveSnake(snake: number[], direction: Direction): number[] {
     // calculate new head position
     const head = snake[snake.length - 1];
-    const row = Math.floor(head / 20);
-    const col = head % 20;
+    const row = Math.floor(head / ROWS);
+    const col = head % COLS;
     let newRow = row;
     let newCol = col;
     switch (direction) {
@@ -83,7 +93,7 @@ export class SceneComponent implements OnDestroy {
         newCol++;
         break;
     }
-    const newHead = newRow * 20 + newCol;
+    const newHead = newRow * ROWS + newCol;
 
     // move snake
     const newSnake = [...snake.slice(1), newHead];
@@ -92,9 +102,11 @@ export class SceneComponent implements OnDestroy {
 
   isSnakeInBounds(snake: number[]): boolean {
     const head = snake[snake.length - 1];
-    const row = Math.floor(head / 20);
-    const col = head % 20;
-    return col > 0 && col < 19 && row >= 0 && row < 19;
+    const row = Math.floor(head / ROWS);
+    const col = head % COLS;
+    const maxRow = ROWS - 1;
+    const maxCol = COLS - 1;
+    return col > 0 && col < maxCol && row > 0 && row < maxRow;
   }
 
   isSnakeSegment(index: number): boolean {
