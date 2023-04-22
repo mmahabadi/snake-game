@@ -1,5 +1,9 @@
 <div ngClass="scene">
   <div class="game-board">
-    <div class="cell" *ngFor="let cell of gameBoard"></div>
+    <div
+      class="cell"
+      *ngFor="let cell of gameBoard; let i = index"
+      [ngClass]="{ snake: isSnakeSegment(i) }"
+    ></div>
   </div>
 </div>

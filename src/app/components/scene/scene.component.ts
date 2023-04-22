@@ -7,4 +7,9 @@ import { Component } from '@angular/core';
 })
 export class SceneComponent {
   gameBoard: number[] = Array(400).fill(0);
+  snake: number[] = [194, 195, 196];
+
+  isSnakeSegment(index: number): boolean {
+    return this.snake.indexOf(index) !== -1;
+  }
 }
