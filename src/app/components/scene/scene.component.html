@@ -1,9 +1,13 @@
 <div ngClass="scene">
-  <div ngClass="game-board">
+  <div
+    ngClass="game-board"
+    [style.grid-template-columns]="templateColStyle"
+    [style.grid-template-rows]="templateRowStyle"
+  >
     <div
       class="cell"
       *ngFor="let cell of gameBoard; let i = index"
-      [ngClass]="{ snake: isSnakeSegment(i) }"
+      [ngClass]="{ snake: isSnakeSegment(i), food: isFood(i) }"
     ></div>
     <div ngClass="game-over" *ngIf="isGameOver">
       <h4>GAME OVER</h4>

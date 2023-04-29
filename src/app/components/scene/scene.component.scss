@@ -4,8 +4,6 @@
 
   .game-board {
     display: grid;
-    grid-template-columns: repeat(25, 20px);
-    grid-template-rows: repeat(25, 20px);
     grid-gap: 1px;
   }
 
@@ -16,6 +14,11 @@
   .snake {
     background-color: var(--snake-color);
   }
+
+  .food {
+    background-color: var(--food-color);
+  }
+
   .game-over {
     position: absolute;
     left: 50%;

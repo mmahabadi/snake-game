@@ -1,6 +1,6 @@
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { Subscription, interval, scan, startWith, takeWhile } from 'rxjs';
-import { COLS, ROWS, SPEED } from 'src/app/constants';
+import { COLS, ROWS, SPEED, CEL_SIZE } from 'src/app/constants';
 import { Direction } from 'src/app/types';
 
 @Component({
@@ -8,15 +8,24 @@ import { Direction } from 'src/app/types';
   templateUrl: './scene.component.html',
   styleUrls: ['./scene.component.scss'],
 })
-export class SceneComponent implements OnDestroy {
+export class SceneComponent implements OnInit, OnDestroy {
   gameBoard: number[] = Array(COLS * ROWS).fill(0);
   snake: number[] = [180, 181, 182]; // initialize snake heading right
   direction: Direction = Direction.Right;
   private interval$!: Subscription;
   isGameOver = false;
+  food: number = 0;
+  animationFrameId!: number;
+  templateColStyle = `repeat(${COLS}, ${CEL_SIZE}px)`;
+  templateRowStyle = `repeat(${ROWS}, ${CEL_SIZE}px)`;
 
   ngOnDestroy() {
     this.interval$.unsubscribe();
+  }
+
+  ngOnInit(): void {
+    // generate initial food position
+    this.generateFood();
   }
 
   @HostListener('document:keydown', ['$event'])
@@ -49,19 +58,27 @@ export class SceneComponent implements OnDestroy {
     }
   }
 
+  tick() {
+    this.animationFrameId = window.requestAnimationFrame(() => this.tick());
+  }
+
   startGame() {
+    this.tick();
     this.interval$ = interval(SPEED)
       .pipe(
         startWith(null),
-        scan(() => this.moveSnake(this.snake, this.direction), this.snake),
-        takeWhile(() => this.isSnakeInBounds(this.snake))
+        scan(() => this.moveSnake(), this.snake),
+        takeWhile(() => !this.isGameOver)
       )
       .subscribe(
         (snake: number[]) => {
           this.snake = snake;
         },
-        console.error,
-        () => (this.isGameOver = true)
+        null,
+        () => {
+          this.animationFrameId = requestAnimationFrame(() => this.startGame());
+          this.gameOver();
+        }
       );
   }
 
@@ -72,38 +89,48 @@ export class SceneComponent implements OnDestroy {
     this.startGame();
   }
 
-  moveSnake(snake: number[], direction: Direction): number[] {
-    // calculate new head position
-    const head = snake[snake.length - 1];
-    const row = Math.floor(head / ROWS);
-    const col = head % COLS;
-    let newRow = row;
-    let newCol = col;
-    switch (direction) {
-      case Direction.Up:
-        newRow--;
-        break;
-      case Direction.Down:
-        newRow++;
+  moveSnake(): number[] {
+    let newHeadIndex;
+    const currentHeadIndex = this.snake[this.snake.length - 1];
+
+    switch (this.direction) {
+      case Direction.Right:
+        newHeadIndex = currentHeadIndex + 1;
         break;
       case Direction.Left:
-        newCol--;
+        newHeadIndex = currentHeadIndex - 1;
         break;
-      case Direction.Right:
-        newCol++;
+      case Direction.Up:
+        newHeadIndex = currentHeadIndex - ROWS;
+        break;
+      case Direction.Down:
+        newHeadIndex = currentHeadIndex + ROWS;
         break;
     }
-    const newHead = newRow * ROWS + newCol;
 
-    // move snake
-    const newSnake = [...snake.slice(1), newHead];
+    const newSnake = [...this.snake.slice(), newHeadIndex];
+
+    if (
+      this.snake.indexOf(newHeadIndex) !== -1 ||
+      !this.isSnakeInBounds(currentHeadIndex)
+    ) {
+      this.gameOver();
+      return [];
+    }
+
+    if (this.isFood(newHeadIndex)) {
+      this.generateFood();
+    } else {
+      newSnake.shift();
+    }
+
     return newSnake;
   }
 
-  isSnakeInBounds(snake: number[]): boolean {
-    const head = snake[snake.length - 1];
+  isSnakeInBounds(head: number): boolean {
+    const col = head % ROWS;
     const row = Math.floor(head / ROWS);
-    const col = head % COLS;
+
     const maxRow = ROWS - 1;
     const maxCol = COLS - 1;
     return col > 0 && col < maxCol && row > 0 && row < maxRow;
@@ -111,5 +138,21 @@ export class SceneComponent implements OnDestroy {
 
   isSnakeSegment(index: number): boolean {
     return this.snake.indexOf(index) !== -1;
+  }
+
+  generateFood() {
+    // generate random food position that's not already part of the snake
+    do {
+      this.food = Math.floor(Math.random() * 400);
+    } while (this.isSnakeSegment(this.food));
+  }
+
+  isFood(index: number): boolean {
+    return this.food === index;
+  }
+
+  gameOver() {
+    this.isGameOver = true;
+    cancelAnimationFrame(this.animationFrameId);
   }
 }
