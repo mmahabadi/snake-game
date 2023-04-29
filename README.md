@@ -1,27 +1,44 @@
-# SnakeApp
+# Snake Game
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 15.2.5.
+This is a simple implementation of the classic Snake Game using Angular and RxJS.
 
-## Development server
+## Description
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+The Snake Game is a classic arcade game in which the player controls a snake that must eat food while avoiding obstacles. This implementation of the game uses Angular and RxJS to provide a modern, reactive gaming experience.
 
-## Code scaffolding
+## Installation
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+To install the game, follow these steps:
 
-## Build
+1. Clone this repository to your local machine using `git clone https://github.com/yourusername/snake-game.git`.
+2. Install the necessary dependencies by running `npm install`.
+3. Start the development server by running `ng serve`.
+4. Open your web browser and navigate to `http://localhost:4200`.
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+## Usage
 
-## Running unit tests
+To play the game, use the arrow keys to move the snake around the board. The objective is to eat as much food as possible without colliding with the walls or the snake's own body. Each food item adds 1 point to the score.
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+## Contributing
 
-## Running end-to-end tests
+Contributions to the Snake Game project are welcome and encouraged. If you would like to contribute, please follow these steps:
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+1. Fork the repository to your own GitHub account.
+2. Create a new branch with a descriptive name using `git checkout -b your-branch-name`.
+3. Make your changes to the code and test them thoroughly.
+4. Commit your changes using `git commit -m "your commit message"`.
+5. Push your changes to your forked repository using `git push origin your-branch-name`.
+6. Create a pull request to merge your changes into the main repository.
 
-## Further help
+## Technologies Used
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+This project was built using the following technologies:
+
+- Angular 15
+- RxJS 7
+- HTML5
+- CSS3
+
+## License
+
+The Snake Game is open source software licensed under the MIT License. See the `LICENSE` file for more information.

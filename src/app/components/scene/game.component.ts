@@ -4,11 +4,11 @@ import { COLS, ROWS, SPEED, CEL_SIZE } from 'src/app/constants';
 import { Direction } from 'src/app/types';
 
 @Component({
-  selector: 'app-scene',
-  templateUrl: './scene.component.html',
-  styleUrls: ['./scene.component.scss'],
+  selector: 'app-game',
+  templateUrl: './game.component.html',
+  styleUrls: ['./game.component.scss'],
 })
-export class SceneComponent implements OnInit, OnDestroy {
+export class GameComponent implements OnInit, OnDestroy {
   gameBoard: number[] = Array(COLS * ROWS).fill(0);
   snake: number[] = [180, 181, 182]; // initialize snake heading right
   direction: Direction = Direction.Right;
@@ -133,7 +133,7 @@ export class SceneComponent implements OnInit, OnDestroy {
 
     const maxRow = ROWS - 1;
     const maxCol = COLS - 1;
-    return col > 0 && col < maxCol && row > 0 && row < maxRow;
+    return col >= 0 && col < maxCol && row >= 0 && row < maxRow;
   }
 
   isSnakeSegment(index: number): boolean {
